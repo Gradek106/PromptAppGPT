@@ -22,5 +22,7 @@ appOptions:
     code: web_image_searcher.yml
   - name: My AutoGPT
     code: my_autogpt.yml
+  - name: Generator Kart Pracy
+    code: karty_pracy.yml
 
 #https://quickref.me/yaml

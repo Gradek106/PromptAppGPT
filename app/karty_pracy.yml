@@ -1,0 +1,43 @@
+---
+author: Adrian
+name: Generator Kart Pracy
+description: Tworzy gotowe do druku karty pracy dla szkoły podstawowej (klasy 1-8) z kluczem odpowiedzi dla nauczyciela
+gptRound: single
+failedRetries: 2
+
+sysTask:
+  - executor: gpt
+    prompt: |
+      Jesteś doświadczonym nauczycielem szkoły podstawowej i metodykiem nauczania.
+      Tworzysz karty pracy zgodne z polską podstawą programową.
+      Zawsze piszesz po polsku, poprawnie, prostym i przyjaznym dla ucznia językiem.
+      Dostosowujesz słownictwo, długość poleceń i trudność zadań do wieku uczniów danej klasy.
+      Odpowiadasz wyłącznie treścią karty pracy, bez komentarzy i wstępów.
+
+userTask:
+  - executor: gpt
+    prompt: |
+      Przygotuj kartę pracy dla szkoły podstawowej według poniższych parametrów.
+
+      Przedmiot: $i{Przedmiot:@select#Matematyka/Język polski/Język angielski/Przyroda/Biologia/Geografia/Historia/Fizyka/Chemia/Edukacja wczesnoszkolna/Informatyka=Matematyka}
+      Klasa: $i{Klasa:@select#1/2/3/4/5/6/7/8=4}
+      Temat: $i{Temat lekcji:@input}
+      Cele lekcji lub dodatkowe wskazówki (opcjonalnie): $i{Dodatkowe wskazówki:@textarea}
+      Liczba zadań: $i{Liczba zadań:@select#3/5/8/10=5}
+      Poziom trudności: $i{Poziom trudności:@select#łatwy/średni/trudny/zróżnicowany (od łatwych do trudnych)=zróżnicowany (od łatwych do trudnych)}
+      Typy zadań: $i{Typy zadań:@select#mieszane/zamknięte (test wyboru)/otwarte/uzupełnianie luk/prawda-fałsz/dopasowywanie/zadania tekstowe=mieszane}
+      Klucz odpowiedzi dla nauczyciela: $i{Klucz odpowiedzi:@select#tak/nie=tak}
+
+      Wymagania dotyczące karty pracy:
+      1. Nagłówek z tytułem tematu, przedmiotem, klasą oraz miejscem na imię, nazwisko i datę (Imię i nazwisko: ............ Data: ............).
+      2. Krótkie, jednozdaniowe wprowadzenie do tematu napisane językiem zrozumiałym dla ucznia tej klasy.
+      3. Dokładnie tyle zadań, ile podano w parametrach, ponumerowanych "Zadanie 1", "Zadanie 2" itd.
+      4. Każde zadanie ma jasne polecenie, a pod nim miejsce na odpowiedź (linie z kropek lub pola do uzupełnienia) oraz liczbę punktów w nawiasie.
+      5. Zadania mają być zgodne z podstawą programową dla podanej klasy i realizować podany temat.
+      6. Jeśli wybrano poziom "zróżnicowany", uporządkuj zadania od najłatwiejszego do najtrudniejszego, a ostatnie oznacz jako "Zadanie dla chętnych".
+      7. Na końcu dodaj krótką sekcję "Samoocena" z 3 zdaniami do zaznaczenia (np. "Rozumiem temat", "Potrzebuję jeszcze poćwiczyć", "Chcę zapytać nauczyciela").
+      8. Jeśli klucz odpowiedzi = tak, po karcie pracy dodaj oddzieloną linią "----------" sekcję "KLUCZ ODPOWIEDZI (dla nauczyciela)" zawierającą odpowiedzi do wszystkich zadań, punktację oraz łączną liczbę punktów. Jeśli klucz odpowiedzi = nie, pomiń tę sekcję.
+      9. Nie używaj formatowania Markdown (bez gwiazdek i krzyżyków), tylko zwykły tekst gotowy do skopiowania i wydrukowania.
+    validator: Zadanie 1[\s\S]{100,}
+
+extra: 
