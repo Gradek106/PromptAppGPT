@@ -294,9 +294,17 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Generator Kart Pracy — produkcja kart pracy dla szkoły podstawowej."
     )
-    parser.add_argument("--api-key", help="Klucz OpenAI API (domyślnie zmienna OPENAI_API_KEY).")
+    parser.add_argument("--api-key", help="Klucz API (domyślnie zmienna OPENAI_API_KEY).")
     parser.add_argument(
-        "--model", default="gpt-4o-mini", help="Model OpenAI do użycia (domyślnie gpt-4o-mini)."
+        "--base-url",
+        default=os.environ.get("OPENAI_BASE_URL"),
+        help=(
+            "Bazowy adres API zgodnego z OpenAI (np. własny proxy/dostawca). "
+            "Domyślnie zmienna OPENAI_BASE_URL, a jeśli nie ustawiona — oficjalne api.openai.com."
+        ),
+    )
+    parser.add_argument(
+        "--model", default="gpt-4o-mini", help="Model do użycia (domyślnie gpt-4o-mini)."
     )
 
     mode = parser.add_mutually_exclusive_group(required=True)
@@ -337,7 +345,7 @@ def main() -> None:
         )
         sys.exit(1)
 
-    client = OpenAI(api_key=api_key)
+    client = OpenAI(api_key=api_key, base_url=args.base_url) if args.base_url else OpenAI(api_key=api_key)
 
     if args.batch:
         run_batch(args, client)
